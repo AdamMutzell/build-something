@@ -1,0 +1,30 @@
+<main class="main">
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">Event Planner</h1>
+            <p class="header-subtitle">The dates that you are able to attend</p>
+        </div>
+    </header>
+    <div class="content">
+        <div class="event-list">
+            <ng-container *ngIf="events && events.length > 0; else noEvents">
+                <div *ngFor="let event of events" class="event-item">
+                    <p-card class="event-card">
+                        <ng-template pTemplate="title">
+                            <div class="event-header">
+                                <h2 class="event-title">{{ event.name }}</h2>
+                                <p-chip label="{{ event.date | date:'fullDate' }}" class="event-date"></p-chip>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="content">
+                            <p class="event-description">{{ event.description }}</p>
+                        </ng-template>
+                    </p-card>
+                </div>
+            </ng-container>
+            <ng-template #noEvents>
+                <p>No events available</p>
+            </ng-template>
+        </div>
+    </div>
+</main>

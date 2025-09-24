@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,11 +7,11 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
+import { PlannedEvent } from '../event';
 
 @Component({
   selector: 'app-root',
   imports: [
-    RouterOutlet, 
     CheckboxModule, 
     CommonModule, 
     FormsModule,
@@ -23,7 +22,7 @@ import { InputTextModule } from 'primeng/inputtext';
     InputTextModule
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['../../styles.scss', './app.component.scss']
 })
 
 
@@ -32,6 +31,15 @@ export class AppComponent {
   checked: boolean = false;
   dates: Date[] = [];
   events: PlannedEvent[] = [];
+  eventLink: string = '';
+
+  copyLink() {
+    navigator.clipboard.writeText(this.eventLink).then(() => {
+      console.log('Link copied to clipboard:', this.eventLink);
+    }).catch(err => {
+      console.error('Failed to copy link: ', err);
+    });
+  }
 
   addEvent(date: Date) {
     console.log(date);
@@ -60,16 +68,55 @@ export class AppComponent {
 
     this.dates = newDates; // update reference
   }
-}
 
-class PlannedEvent {
-  name: string;
-  date: Date; 
-  description: string;
+  testApi() {
+    fetch('http://127.0.0.1:3000/', {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('API response:', data);
+    })
+    .catch(error => {
+      console.error('Error calling API:', error);
+    });
+  }
 
-  constructor(date: Date) {
-    this.name = 'New Event';
-    this.date = date;
-    this.description = 'This is an event planned for ' + date.toDateString();
+  testSquare() {
+    const numberToSquare = this.events.length ;
+    fetch('http://127.0.0.1:3000/square/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ num: numberToSquare })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('API response:', data);
+    })
+    .catch(error => {
+      console.error('Error calling API:', error);
+    });
+  }
+
+  sendToDatabase() {
+    const message = this.events.map(event => event.toJSON());
+
+    fetch('http://127.0.0.1:3000/database/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(message)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('API response:', data);
+      this.eventLink = data.link;
+    })
+    .catch(error => {
+      console.error('Error calling API:', error);
+    });
   }
 }

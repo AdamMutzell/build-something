@@ -1,0 +1,47 @@
+services:
+  frontend:
+    
+    build: ./angular-docker
+    image: angular-calendar
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./angular-docker/src:/app/src
+  link-provider:
+    build: ./link-provider
+    image: link-provider
+    ports:
+      - "3000:5000"
+    environment:
+      DB_HOST: event-store
+      DB_NAME: event_store
+      DB_PORT: 3306
+      EVENT_VIEW_URL: http://localhost:4200/signup
+    secrets:
+      - db_user
+      - db_password
+    
+    volumes:
+      - ./link-provider/app:/link-provider/app
+  event-store:
+    image: mysql:8.0
+    restart: always
+    ports:
+    - "3307:3306"
+    environment:
+      MYSQL_DATABASE: event_store
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    secrets:
+      - db_password
+
+volumes:
+  db_data:
+
+secrets:
+  db_user:
+    file: ./secrets/db_user.txt
+  db_password:
+    file: ./secrets/db_password.txt

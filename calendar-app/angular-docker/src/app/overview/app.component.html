@@ -1,111 +1,75 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
-<main class="main">
-  <div class="content">
-    <div class="left-side">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 982 239"
-        fill="none"
-        class="angular-logo"
-      >
-        
-        <defs>
-          <radialGradient
-            id="c"
-            cx="0"
-            cy="0"
-            r="1"
-            gradientTransform="rotate(118.122 171.182 60.81) scale(205.794)"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stop-color="#FF41F8" />
-            <stop offset=".707" stop-color="#FF41F8" stop-opacity=".5" />
-            <stop offset="1" stop-color="#FF41F8" stop-opacity="0" />
-          </radialGradient>
-          <linearGradient
-            id="b"
-            x1="0"
-            x2="982"
-            y1="192"
-            y2="192"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stop-color="#F0060B" />
-            <stop offset="0" stop-color="#F0070C" />
-            <stop offset=".526" stop-color="#CC26D5" />
-            <stop offset="1" stop-color="#7702FF" />
-          </linearGradient>
-          <clipPath id="a"><path fill="#fff" d="M0 0h982v239H0z" /></clipPath>
-        </defs>
-      </svg>
-      <h1>Welcome to Kalendaria!</h1>
-  
-      <div>
-        <p-card>
+
+
+<main class="main tidy-main">
+  <section class="overview-grid">
+    <div class="overview-left">
+      <h1 class="app-title">Kalendaria</h1>
+      <p class="subtitle">Plan your event, select dates, and share with friends!</p>
+      <p-card class="calendar-card">
+        <ng-template pTemplate="title">
+          <span class="card-title">Event Planner</span>
+        </ng-template>
+        <ng-template pTemplate="subtitle">
+          <span class="card-subtitle">Select your available dates</span>
+        </ng-template>
+        <p-datepicker
+          inputId="calendar-input"
+          [(ngModel)]="dates"
+          selectionMode="multiple"
+          [numberOfMonths]="2"
+          [inline]="true"
+          (ngModelChange)="onDatesChanged($event)"
+        ></p-datepicker>
+       
+      </p-card>
+      <p-card class="link-card">
+        <ng-template pTemplate="title">
+          <span class="card-title">Your Event Link</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <p>Share this link so others can select their dates.</p>
+          <div class="button-row">
+            <p-button label="Generate Link" severity="info" icon="pi pi-envelope" class="styled-button" [disabled]="!dates.length" (onClick)="sendToDatabase()"/>
+            <p-button type="button" label="Copy Link" icon="pi pi-copy" (click)="copyLink()" [disabled]="!eventLink"/>
+          </div>
+          <div class="event-link">
+            <p *ngIf="eventLink">
+              <a [href]="eventLink" target="_blank">{{ eventLink }}</a>
+            </p>
+            <p *ngIf="!eventLink">
+              Click "Generate Link" to create your event link.
+            </p>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+    
+    
+  </section>
+  <section class="event-list-section">
+    <h2 class="event-list-title">Planned Events</h2>
+    <div class="event-card-list">
+      <p *ngIf="events.length === 0">No events planned yet. Select dates from the calendar.</p>
+      <ng-container *ngFor="let e of events">
+        <p-card class="event-card">
           <ng-template pTemplate="title">
-            Event planner
+            <input class="sneaky-input-text" type="text" pInputText [(ngModel)]="e.name" placeholder="Event name" />
+            <p-chip label="{{ e.date | date:'fullDate' }}"></p-chip>
           </ng-template>
           <ng-template pTemplate="subtitle">
-            Select your available dates
+            {{ e.date | date:'fullDate' }}
           </ng-template>
-          <p-datepicker
-            [(ngModel)]="dates"
-            selectionMode="multiple"
-            inputId="calendar-input"
-            [numberOfMonths]="2"
-            [inline]="true"
-            (ngModelChange)="onDatesChanged($event)"
-          />
           <ng-template pTemplate="content">
-            <div class="event-card-list">
-              <p *ngIf="events.length === 0">No events planned yet. Select dates from the calendar.</p>
-              <ng-container *ngFor="let e of events">
-                <p-card>
-                  <ng-template pTemplate="title" class="event-title">
-                    <input class="sneaky-input-text" type="text" pInputText [(ngModel)]="e.name" />
-                    <p-chip label="{{ e.date | date:'fullDate' }}"></p-chip>
-                  </ng-template>
-                  <ng-template pTemplate="subtitle">
-                    {{ e.date | date:'fullDate' }}
-                  </ng-template>
-                  <ng-template pTemplate="content">
-                    {{ e.description }}
-                  </ng-template>
-                </p-card>
-                
-              </ng-container>
-            </div>
+            {{ e.description }}
           </ng-template>
         </p-card>
-      </div>
+      </ng-container>
     </div>
-    <div class="divider" role="separator" aria-label="Divider"></div>
-    <div class="right-side">
-    </div>
-  </div>
+  </section>
 </main>
 
-<ng-template #eventCard >
-  <p-card>
-    <ng-template pTemplate="title">
-      Event Title
-    </ng-template>
-    <ng-template pTemplate="subtitle">
-      Event Subtitle
-    </ng-template>
-    <ng-template pTemplate="content">
-      Event Content
-    </ng-template>
-  </p-card>
-</ng-template>
+
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
@@ -114,5 +78,3 @@
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
-
-<router-outlet />
