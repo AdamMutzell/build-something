@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
 import { PlannedEvent } from '../event';
+import { API_BASE_URL } from '../../app.config';
 
 @Component({
   selector: 'app-event-view',
@@ -42,7 +43,7 @@ export class EventViewComponent {
     const message = { creationId: this.eventGroupId };
     console.log('Sending message to API:', message);
 
-    fetch('http://127.0.0.1:3000/fetch_events/', {
+    fetch(`${API_BASE_URL}/fetch_events/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -56,7 +57,7 @@ export class EventViewComponent {
     .then(data => {
       console.log('Received data from API:', data);
       const parsedData = JSON.parse(data.data.replace(/'/g, '"'));
-      this.events = parsedData.map((event: any) => new PlannedEvent(new Date(event.start)));
+      this.events = parsedData.map((event: any) => new PlannedEvent(new Date(event.start), event.name, event.description));
     })
     .catch(error => {
       console.error('Error calling API:', error);

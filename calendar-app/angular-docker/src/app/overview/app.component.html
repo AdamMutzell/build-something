@@ -32,6 +32,7 @@
           <div class="button-row">
             <p-button label="Generate Link" severity="info" icon="pi pi-envelope" class="styled-button" [disabled]="!dates.length" (onClick)="sendToDatabase()"/>
             <p-button type="button" label="Copy Link" icon="pi pi-copy" (click)="copyLink()" [disabled]="!eventLink"/>
+            <p-button label="TEST" icon="pi pi-external-link" class="styled-button" (onClick)="testApi()"/>
           </div>
           <div class="event-link">
             <p *ngIf="eventLink">

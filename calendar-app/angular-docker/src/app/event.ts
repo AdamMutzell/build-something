@@ -5,10 +5,10 @@ export class PlannedEvent {
   date: Date; 
   description: string;
 
-  constructor(date: Date) {
-    this.name = 'New Event';
+  constructor(date: Date, name?: string, description?: string) {
+    this.name = name || 'New Event';
     this.date = date;
-    this.description = 'This is an event planned for ' + date.toDateString();
+    this.description = description || 'This is an event planned for ' + date.toDateString();
   }
 
   toString(): string {

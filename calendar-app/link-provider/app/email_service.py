@@ -14,7 +14,7 @@ import mysql.connector
 # Helper to read Docker secrets
 def get_secret(secret_path):
     try:
-        with open(secret_path, 'r') as f:
+        with open(secret_path, 'r', encoding='utf-8') as f:
             return f.read().strip()
     except Exception as e:
         app.logger.error(f"Failed to read secret {secret_path}: {e}")

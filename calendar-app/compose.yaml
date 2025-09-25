@@ -1,6 +1,5 @@
 services:
   frontend:
-    
     build: ./angular-docker
     image: angular-calendar
     ports:
@@ -10,8 +9,8 @@ services:
   link-provider:
     build: ./link-provider
     image: link-provider
-    ports:
-      - "3000:5000"
+    expose:
+      - "3000"
     environment:
       DB_HOST: event-store
       DB_NAME: event_store
@@ -26,8 +25,8 @@ services:
   event-store:
     image: mysql:8.0
     restart: always
-    ports:
-    - "3307:3306"
+    expose:
+      - "3306"
     environment:
       MYSQL_DATABASE: event_store
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password

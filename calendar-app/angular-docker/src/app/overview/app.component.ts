@@ -8,6 +8,7 @@ import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
 import { PlannedEvent } from '../event';
+import { API_BASE_URL } from '../../app.config';
 
 @Component({
   selector: 'app-root',
@@ -70,7 +71,7 @@ export class AppComponent {
   }
 
   testApi() {
-    fetch('http://127.0.0.1:3000/', {
+    fetch(`${API_BASE_URL}/`, {
       method: 'GET'
     })
     .then(response => response.json())
@@ -84,7 +85,7 @@ export class AppComponent {
 
   testSquare() {
     const numberToSquare = this.events.length ;
-    fetch('http://127.0.0.1:3000/square/', {
+    fetch(`${API_BASE_URL}/square/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -103,7 +104,7 @@ export class AppComponent {
   sendToDatabase() {
     const message = this.events.map(event => event.toJSON());
 
-    fetch('http://127.0.0.1:3000/database/', {
+    fetch(`${API_BASE_URL}/database/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
