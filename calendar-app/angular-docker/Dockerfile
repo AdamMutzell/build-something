@@ -1,17 +1,15 @@
-ARG NODE_VERSION=20-alpine
+FROM nginx:alpine
 
-FROM node:${NODE_VERSION}
+# Remove default Nginx static assets
+RUN rm -rf /usr/share/nginx/html/*
 
-WORKDIR /app
+# Copy Angular build output (browser folder)
+COPY dist/angular-docker/browser/ /usr/share/nginx/html
 
-# Install deps
-COPY package.json package-lock.json ./
-RUN npm install
-RUN npm install primeng @primeuix/themes
+# Copy custom Nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy source (or rely on volume mount instead)
-COPY . .
-
+# Expose port 4200 (or 80 if you prefer)
 EXPOSE 4200
 
-CMD ["npm", "start", "--", "--host=0.0.0.0"]
+CMD ["nginx", "-g", "daemon off;"]

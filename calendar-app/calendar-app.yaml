@@ -156,7 +156,7 @@ metadata:
     io.kompose.service: frontend
   name: frontend
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       io.kompose.service: frontend
@@ -168,7 +168,7 @@ spec:
         io.kompose.service: frontend
     spec:
       containers:
-        - image: arrow02/angular-calendar:latest
+        - image: arrow02/angular-calendar:prod
           name: frontend
           ports:
             - containerPort: 4200
