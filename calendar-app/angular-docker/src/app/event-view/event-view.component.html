@@ -8,16 +8,20 @@
     <div class="content">
         <div class="event-list">
             <ng-container *ngIf="events && events.length > 0; else noEvents">
-                <div *ngFor="let event of events" class="event-item">
+                <div *ngFor="let event of events" class="event-list-item">
                     <p-card class="event-card">
                         <ng-template pTemplate="title">
+                            <h2 class="event-title">{{ event.name }}</h2>
                             <div class="event-header">
-                                <h2 class="event-title">{{ event.name }}</h2>
+                                
                                 <p-chip label="{{ event.date | date:'fullDate' }}" class="event-date"></p-chip>
                             </div>
                         </ng-template>
                         <ng-template pTemplate="content">
                             <p class="event-description">{{ event.description }}</p>
+                            <p-checkbox inputId="will-attend-{{ event.id }}" class="event-checkbox" [(ngModel)]="event.selected" binary="true" ></p-checkbox>
+                            <label for="will-attend-{{ event.id }}" class="ml-2"> I will attend! </label>
+                            <p-tag value="Attendees: {{ event.numberOfAttendees || 0 }}" severity="info"></p-tag>
                         </ng-template>
                     </p-card>
                 </div>
@@ -25,6 +29,10 @@
             <ng-template #noEvents>
                 <p>No events available</p>
             </ng-template>
+            <div class="button-group">
+                <p-button label="Refresh Events" icon="pi pi-refresh" (onClick)="getEventData()" class="refresh-button"></p-button>
+                <p-button label="Submit Attendance" icon="pi pi-check" (onClick)="submitAttendance()" class="submit-button" ></p-button>
+            </div>
         </div>
     </div>
 </main>

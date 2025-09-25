@@ -1,7 +1,7 @@
 FROM python:3.11-slim
-WORKDIR /link-provider
+WORKDIR /signup-manager
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-EXPOSE 31567
-CMD ["python", "app/email_service.py"]
+EXPOSE 31566
+CMD ["python", "app/signup.py"]

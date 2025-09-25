@@ -98,7 +98,7 @@ class Database(Resource):
     def __init__(self):
         self.conn = create_database_connection()
         self.cursor = self.conn.cursor()
-        self.base_url = os.getenv('EVENT_VIEW_URL', 'http://localhost:5000')
+        self.base_url = os.getenv('EVENT_VIEW_URL', 'http://localhost:4200')
         
     def get(self):
         return {'message': 'This is the Database endpoint'}
@@ -171,4 +171,4 @@ if __name__ == '__main__':
     api.add_resource(Link, '/link/')
     api.add_resource(Database, '/database/')
     api.add_resource(FetchEvents, '/fetch_events/')
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=31567)  # for link-provider

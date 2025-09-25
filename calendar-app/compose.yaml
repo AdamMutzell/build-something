@@ -6,11 +6,12 @@ services:
       - "4200:4200"
     volumes:
       - ./angular-docker/src:/app/src
+      
   link-provider:
     build: ./link-provider
     image: link-provider
-    expose:
-      - "3000"
+    ports:
+      - "31567:31567"
     environment:
       DB_HOST: event-store
       DB_NAME: event_store
@@ -22,11 +23,27 @@ services:
     
     volumes:
       - ./link-provider/app:/link-provider/app
+    
+  signup-provider:
+    build: ./signup-provider
+    image: signup-provider
+    ports:
+      - "31566:31566"
+    environment:
+      DB_HOST: event-store
+      DB_NAME: event_store
+      DB_PORT: 3306
+    secrets:
+      - db_user
+      - db_password
+    
+    volumes:
+      - ./signup-manager/app:/signup-manager/app
   event-store:
     image: mysql:8.0
     restart: always
-    expose:
-      - "3306"
+    ports:
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: event_store
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
